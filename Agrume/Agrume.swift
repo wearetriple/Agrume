@@ -153,6 +153,15 @@ public final class Agrume: UIViewController {
     spinner.alpha = 0
     return spinner
   }()
+    private lazy var closeButton: UIButton = {
+        let button = UIButton(type: .Custom)
+        button.frame = CGRectMake(self.view.frame.size.width - 60, 30, 50, 50)
+        button.setImage(UIImage(named: "close_normal"), forState: .Normal)
+        button.setImage(UIImage(named: "close_highlighted"), forState: .Highlighted)
+        button.addTarget(self, action: #selector(Agrume.dismissAfterTap), forControlEvents: .TouchUpInside)
+        return button
+    }()
+
   private var downloadTask: NSURLSessionDataTask?
 
   override public func viewDidLoad() {
@@ -164,6 +173,7 @@ public final class Agrume: UIViewController {
     blurContainerView.addSubview(blurView)
     view.addSubview(blurContainerView)
     view.addSubview(collectionView)
+    view.addSubview(closeButton)
 
     if let index = startIndex {
       collectionView.scrollToItemAtIndexPath(NSIndexPath(forRow: index, inSection: 0), atScrollPosition: [],
@@ -196,7 +206,7 @@ public final class Agrume: UIViewController {
       self.collectionView.frame = self.view.frame
       let scaling = Agrume.InitialScalingToExpandFrom
       self.collectionView.transform = CGAffineTransformMakeScale(scaling, scaling)
-  
+        self.closeButton.alpha = 0
       viewController.presentViewController(self, animated: false) {
         UIView.animateWithDuration(Agrume.TransitionAnimationDuration,
                                    delay: 0,
@@ -204,6 +214,7 @@ public final class Agrume: UIViewController {
                                    animations: { [weak self] in
                                       self?.collectionView.alpha = 1
                                       self?.collectionView.transform = CGAffineTransformIdentity
+                                    self?.closeButton.alpha = 1
                                    }, completion: { [weak self] finished in
                                       self?.view.userInteractionEnabled = finished
                                    })
@@ -430,6 +441,7 @@ extension Agrume: AgrumeCellDelegate {
                                options: [.BeginFromCurrentState, .CurveEaseInOut],
                                animations: { [unowned self] in
                                 self.collectionView.alpha = 0
+                                self.closeButton.alpha = 0
                                 self.blurContainerView.alpha = 0
       }, completion: dismissCompletion)
   }
@@ -443,6 +455,7 @@ extension Agrume: AgrumeCellDelegate {
                                animations: { [unowned self] in
                                 self.collectionView.alpha = 0
                                 self.blurContainerView.alpha = 0
+                                self.closeButton.alpha = 0
                                 let scaling = Agrume.MaxScalingForExpandingOffscreen
                                 self.collectionView.transform = CGAffineTransformMakeScale(scaling, scaling)
       }, completion: dismissCompletion)
