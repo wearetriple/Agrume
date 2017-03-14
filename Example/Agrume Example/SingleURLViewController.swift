@@ -1,6 +1,5 @@
 //
-//  SingleURLViewController.swift
-//  Agrume Example
+//  Copyright © 2016 Schnaub. All rights reserved.
 //
 
 import UIKit
@@ -8,10 +7,10 @@ import Agrume
 
 final class SingleURLViewController: UIViewController {
 
-    @IBAction func openURL(sender: AnyObject) {
-        let agrume = Agrume(imageURL: NSURL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!,
-                backgroundBlurStyle: .Light)
-        agrume.showFrom(self)
-    }
+  @IBAction func openURL(_ sender: AnyObject) {
+    let agrume = Agrume(imageUrl: URL(string: "https://dl.dropboxusercontent.com/u/512759/MapleBacon.png")!,
+                        backgroundBlurStyle: .light)
+    agrume.showFrom(self)
+  }
 
 }
