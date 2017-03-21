@@ -162,6 +162,15 @@ public final class Agrume: UIViewController {
     return UIDevice.current.orientation
   }
 
+  fileprivate lazy var closeButton: UIButton = {
+    let button = UIButton(type: .custom)
+    button.frame = CGRect(x: self.view.frame.size.width - 60, y: 30, width: 50, height: 50)
+    button.setImage(UIImage(named: "close_normal"), for: .normal)
+    button.setImage(UIImage(named: "close_highlighted"), for: .highlighted)
+    button.addTarget(self, action: #selector(Agrume.dismissAfterTap), for: .touchUpInside)
+    return button
+  }()
+  
   private var backgroundSnapshot: UIImage!
   private var backgroundImageView: UIImageView!
   fileprivate var _blurContainerView: UIView?
@@ -259,6 +268,7 @@ public final class Agrume: UIViewController {
       collectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: [], animated: false)
     }
     view.addSubview(spinner)
+    view.addSubview(closeButton)
   }
   
   private func showFrom(_ viewController: UIViewController) {
@@ -268,6 +278,8 @@ public final class Agrume: UIViewController {
       self.collectionView.frame = self.view.frame
       let scaling = Agrume.initialScalingToExpandFrom
       self.collectionView.transform = CGAffineTransform(scaleX: scaling, y: scaling)
+
+      self.closeButton.alpha = 0
       
       viewController.present(self, animated: false) {
         UIView.animate(withDuration: Agrume.transitionAnimationDuration,
@@ -276,6 +288,7 @@ public final class Agrume: UIViewController {
                        animations: { [weak self] in
                         self?.collectionView.alpha = 1
                         self?.collectionView.transform = .identity
+                        self?.closeButton.alpha = 1
           }, completion: { [weak self] _ in
             self?.view.isUserInteractionEnabled = true
           })
@@ -531,6 +544,7 @@ extension Agrume: AgrumeCellDelegate {
                    animations: { [unowned self] in
                     self.collectionView.alpha = 0
                     self.blurContainerView.alpha = 0
+                    self.closeButton.alpha = 0
       }, completion: dismissCompletion)
   }
   
@@ -543,6 +557,7 @@ extension Agrume: AgrumeCellDelegate {
                    animations: { [unowned self] in
                     self.collectionView.alpha = 0
                     self.blurContainerView.alpha = 0
+                    self.closeButton.alpha = 0
                     let scaling = Agrume.maxScalingForExpandingOffscreen
                     self.collectionView.transform = CGAffineTransform(scaleX: scaling, y: scaling)
       }, completion: dismissCompletion)
