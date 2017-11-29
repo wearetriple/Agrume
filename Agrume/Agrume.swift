@@ -570,7 +570,7 @@ extension Agrume: AgrumeCellDelegate {
       }, completion: dismissCompletion)
   }
   
-  func dismissAfterTap() {
+  @objc func dismissAfterTap() {
     view.isUserInteractionEnabled = false
     
     UIView.animate(withDuration: Agrume.transitionAnimationDuration,
